@@ -751,7 +751,11 @@ pcre/chartables.c:   pcre/dftables@EXEEXT@
 		pcre/dftables@EXEEXT@ >pcre/chartables.c
 
 pcre/dftables@EXEEXT@:       pcre/dftables.c pcre/maketables.c pcre/pcre.h pcre/internal.h pcre/config.h
+ifeq ($(OS),Windows_NT)
 		$(CC) -o pcre/dftables@EXEEXT@ $(CFLAGS) pcre/dftables.c
+else
+		gcc -o pcre/dftables@EXEEXT@ pcre/dftables.c
+endif
 
 # Win32
 w32log.@OBJEXT@: w32log.c errlog.h config.h jcc.h loadcfg.h miscutil.h pcre/pcre.h pcre/pcreposix.h pcrs.h project.h w32log.h w32taskbar.h win32.h
@@ -759,7 +763,7 @@ w32taskbar.@OBJEXT@: w32taskbar.c config.h w32log.h w32taskbar.h
 win32.@OBJEXT@: win32.c config.h jcc.h loadcfg.h pcre/pcre.h pcre/pcreposix.h pcrs.h project.h w32log.h win32.h w32svrapi.h
 
 w32.res: w32.rc w32res.h icons/radar-01.ico icons/radar-02.ico icons/radar-03.ico icons/radar-04.ico icons/radar-05.ico icons/radar-06.ico icons/radar-07.ico icons/radar-08.ico icons/idle.ico icons/privoxy.ico config.h
-	windres -F pe-i386 -D__MINGW32__=0.2 -O coff -i $< -o $@
+	$(CC:gcc=windres) -F pe-i386 -D__MINGW32__=0.2 -O coff -i $< -o $@
 
 $(PROGRAM): $(OBJS) $(W32_FILES)
 	$(LD) $(LDFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
